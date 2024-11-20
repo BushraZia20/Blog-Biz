@@ -72,7 +72,7 @@ const CreatePostForm = () => {
 
     try {
       const response = await axios.post(
-        `${api_url}/api/images/upload`,
+        `https://blog-biz.onrender.com/api/images/upload`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

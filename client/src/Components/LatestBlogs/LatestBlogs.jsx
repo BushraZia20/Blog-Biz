@@ -8,7 +8,9 @@ const LatestBlogs = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get(`${api_url}/api/images`);
+        const response = await axios.get(
+          `https://blog-biz.onrender.com/api/images`
+        );
         setPosts(response.data);
       } catch (error) {
         console.error("Error fetching posts:", error);

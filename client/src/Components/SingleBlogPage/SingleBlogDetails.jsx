@@ -10,9 +10,7 @@ const SingleBlogDetails = () => {
   useEffect(() => {
     const showPostDetails = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:5000/api/images/${id}`
-        );
+        const response = await axios.get(`api_url/api/images/${id}`);
         setShowPost(response.data); // Ensure response.data is an array or adapt accordingly
       } catch (error) {
         console.error(error);

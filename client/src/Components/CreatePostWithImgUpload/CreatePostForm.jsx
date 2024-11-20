@@ -71,13 +71,9 @@ const CreatePostForm = () => {
     formData.append("username", username);
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/images/upload",
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const response = await axios.post("api_url/api/images/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       alert(response.data.message);
       navigate("/homepage");
     } catch (error) {

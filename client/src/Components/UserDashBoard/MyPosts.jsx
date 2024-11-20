@@ -97,7 +97,7 @@ const MyPosts = () => {
       if (postData.image) formData.append("image", postData.image);
 
       const response = await axios.patch(
-        `api_url/api/images/${postData.id}`,
+        `${api_url}/api/images/${postData.id}`,
         formData
       );
       setPosts((prev) =>

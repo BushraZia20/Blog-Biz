@@ -336,7 +336,7 @@ export default function SignUp() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`api_url/api/auth/register`, {
+      const response = await fetch(`${api_url}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

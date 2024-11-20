@@ -6,13 +6,12 @@ import { useParams } from "react-router-dom";
 const SingleBlogDetails = () => {
   const [showPost, setShowPost] = useState([]);
   const { id } = useParams();
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     const showPostDetails = async () => {
       try {
-        const response = await axios.get(
-          `https://blog-biz.onrender.com/api/images/${id}`
-        );
+        const response = await axios.get(`${apiUrl}/api/images/${id}`);
         setShowPost(response.data); // Ensure response.data is an array or adapt accordingly
       } catch (error) {
         console.error(error);

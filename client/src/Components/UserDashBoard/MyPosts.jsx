@@ -9,6 +9,7 @@ const MyPosts = () => {
   const [error, setError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     const getMyPosts = async () => {
@@ -57,37 +58,6 @@ const MyPosts = () => {
     }
   };
 
-  // const handleEditPost = async (postData) => {
-  //   const formData = new FormData();
-  //   formData.append("category", postData.category);
-  //   formData.append("title", postData.title);
-  //   formData.append("content", postData.content);
-  //   if (postData.image) formData.append("image", postData.image);
-
-  //   try {
-  //     const url = `http://localhost:5000/api/images/${postData.id}`;
-  //     const options = {
-  //       method: "PATCH",
-  //       body: formData,
-  //     };
-  //     const response = await fetch(url, options);
-  //     if (response.ok) {
-  //       const data = await response.json();
-  //       console.log(data);
-  //       setPosts((prev) =>
-  //         prev.map((post) =>
-  //           post._id === postData.id ? { ...post, ...data.post } : post
-  //         )
-  //       );
-
-  //       setIsModalOpen(false);
-  //       alert("Post updated Successfully");
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
   const handleEditPost = async (postData) => {
     try {
       const formData = new FormData();
@@ -97,7 +67,7 @@ const MyPosts = () => {
       if (postData.image) formData.append("image", postData.image);
 
       const response = await axios.patch(
-        `https://blog-biz.onrender.com/api/images/${postData.id}`,
+        `${apiUrl}/api/images/${postData.id}`,
         formData
       );
       setPosts((prev) =>

@@ -4,13 +4,12 @@ import { Link } from "react-router-dom";
 
 const LatestBlogs = () => {
   const [posts, setPosts] = useState([]);
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get(
-          `https://blog-biz.onrender.com/api/images`
-        );
+        const response = await axios.get(`${apiUrl}/api/images`);
         setPosts(response.data);
       } catch (error) {
         console.error("Error fetching posts:", error);

@@ -10,6 +10,7 @@ const CreatePostForm = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [bgColor, setBgColor] = useState("#ffffff");
   const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
   const userId = localStorage.getItem("userId");
   const username = localStorage.getItem("authorName");
@@ -72,7 +73,7 @@ const CreatePostForm = () => {
 
     try {
       const response = await axios.post(
-        `https://blog-biz.onrender.com/api/images/upload`,
+        `${apiUrl}/api/images/upload`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

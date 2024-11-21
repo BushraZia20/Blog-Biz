@@ -61,8 +61,8 @@ const EditPost = ({ post, isOpen, onClose, onEdit }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white p-6 w-full max-w-lg rounded-lg relative">
+    <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50 overflow-y-auto">
+      <div className="bg-white p-6 w-full max-w-lg rounded-lg relative max-h-[90vh] overflow-y-auto">
         <button
           className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
           onClick={onClose}

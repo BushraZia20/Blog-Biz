@@ -21,12 +21,9 @@ const MyPosts = () => {
           return;
         }
 
-        const response = await axios.get(
-          `http://localhost:5000/api/images/myposts`,
-          {
-            params: { userId },
-          }
-        );
+        const response = await axios.get(`${apiUrl}/api/images/myposts`, {
+          params: { userId },
+        });
 
         setPosts(response.data);
       } catch (err) {
@@ -46,9 +43,7 @@ const MyPosts = () => {
         "Are you sure you want to delete this post?"
       );
       if (!confirmation) return;
-      const response = await axios.delete(
-        `http://localhost:5000/api/images/${postId}`
-      );
+      const response = await axios.delete(`${apiUrl}/api/images/${postId}`);
       if (response.status === 200) {
         setPosts((prev) => prev.filter((post) => post._id !== postId));
         alert("Post deleted successfully");

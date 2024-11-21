@@ -4,7 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 
 const UserDashBoard = () => {
   const navigate = useNavigate();
-
+  const username = localStorage.getItem("authorName");
+  const userEmail = localStorage.getItem("email");
   const handleLogout = () => {
     localStorage.removeItem("jwt");
     navigate("/login");
@@ -26,7 +27,7 @@ const UserDashBoard = () => {
                 alt="User Profile"
               />
               <h2 className="text-2xl font-bold mt-4 text-gray-800">
-                Welcome, [User's Name]!
+                Welcome, {username}!
               </h2>
               <p className="text-gray-500">Full Stack Developer</p>
               <div className="flex mt-8 space-x-4">
@@ -56,9 +57,7 @@ const UserDashBoard = () => {
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                   <div>
                     <p className="text-sm text-gray-500">Email</p>
-                    <p className="text-gray-700 font-medium">
-                      user@example.com
-                    </p>
+                    <p className="text-gray-700 font-medium">{userEmail}</p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Phone</p>
@@ -83,8 +82,8 @@ const UserDashBoard = () => {
                   Quick Links
                 </h3>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                  <a
-                    href="#my-posts"
+                  <Link
+                    to="/my-posts"
                     className="p-6 bg-blue-100 rounded-lg shadow hover:shadow-lg hover:bg-blue-200 transition duration-300 flex flex-col items-center"
                   >
                     <svg
@@ -97,10 +96,10 @@ const UserDashBoard = () => {
                       <path d="M4 7h16v2H4zM4 10h16v2H4zM4 13h16v2H4zM4 16h16v2H4zM4 19h16v2H4z" />
                     </svg>
                     <span className="text-blue-700 font-medium">My Posts</span>
-                  </a>
+                  </Link>
 
-                  <a
-                    href="#new-post"
+                  <Link
+                    to="/create-post-form"
                     className="p-6 bg-green-100 rounded-lg shadow hover:shadow-lg hover:bg-green-200 transition duration-300 flex flex-col items-center"
                   >
                     <svg
@@ -114,7 +113,7 @@ const UserDashBoard = () => {
                     <span className="text-green-700 font-medium">
                       Create New Post
                     </span>
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>

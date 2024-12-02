@@ -32,8 +32,7 @@ const postSchema = new mongoose.Schema(
     title: String,
     content: String,
     img: {
-      data: Buffer,
-      contentType: String,
+      type: String,
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,

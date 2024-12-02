@@ -26,7 +26,7 @@ export default function SignUp() {
         setUsername("");
         setEmail("");
         setPassword("");
-        navigate("/login"); // Redirect to login page after successful registration
+        navigate("/login");
       }
     } catch (error) {
       console.log(error);

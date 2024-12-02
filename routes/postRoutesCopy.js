@@ -1,17 +1,14 @@
 const express = require("express");
 const multer = require("multer");
 const Post = require("../models/Image");
-const fileUpload = require("../helper/upload");
 const UserProfile = require("../models/UserProfile");
 
 const router = express.Router();
-const uploader = multer({
-  storage: multer.diskStorage({}),
-  limits: { fileSize: 10 * 1024 * 1024 },
-});
+const storage = multer.memoryStorage();
+const upload = multer({ storage, limits: { fileSize: 10 * 1024 * 1024 } });
 
 //CREATE
-router.post("/upload", uploader.single("image"), async (req, res) => {
+router.post("/upload", upload.single("image"), async (req, res) => {
   try {
     const { userId, username, title, content, category } = req.body;
     if (
@@ -19,18 +16,19 @@ router.post("/upload", uploader.single("image"), async (req, res) => {
       !req.body.content ||
       !req.body.category ||
       !req.file ||
-      !req.file.path
+      !req.file.buffer
     ) {
       return res.status(400).json({ message: "All fields are required" });
     }
-
-    const uploadedImgData = await fileUpload.uploadFile(req.file.path);
 
     const newPost = new Post({
       category,
       title,
       content,
-      img: uploadedImgData.secure_url,
+      img: {
+        data: req.file.buffer,
+        contentType: req.file.mimetype,
+      },
       userId,
       username,
     });
@@ -44,7 +42,10 @@ router.post("/upload", uploader.single("image"), async (req, res) => {
         category: newPost.category,
         title: newPost.title,
         content: newPost.content,
-        img: newPost.img,
+        img: {
+          data: newPost.img.data.toString("base64"),
+          contentType: newPost.img.contentType,
+        },
         userId: newPost.userId,
         username: newPost.username,
         createdAt: newPost.createdAt,
@@ -63,21 +64,21 @@ router.post("/upload", uploader.single("image"), async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const posts = await Post.find();
-    // res.json({ message: "All Posts Retrieved Successfully", data: posts });
-    res.status(200).json({
-      message: "Posts retrieved successfully",
-      posts: posts.map((post) => ({
+    res.json(
+      posts.map((post) => ({
         id: post._id,
         category: post.category,
         title: post.title,
         content: post.content,
-        img: post.img,
+        img: `data:${post.img.contentType};base64,${post.img.data.toString(
+          "base64"
+        )}`,
         userId: post.userId,
         username: post.username,
         createdAt: post.createdAt,
         updatedAt: post.updatedAt,
-      })),
-    });
+      }))
+    );
   } catch (error) {
     res.status(500).json({ message: "Error retrieving posts", error });
   }
@@ -100,7 +101,9 @@ router.get("/myposts", async (req, res) => {
         category: post.category,
         title: post.title,
         content: post.content,
-        img: post.img,
+        img: `data:${post.img.contentType};base64,${post.img.data.toString(
+          "base64"
+        )}`,
         userId: post.userId,
         username: post.username,
         createdAt: post.createdAt,
@@ -127,14 +130,12 @@ router.delete("/:id", async (req, res) => {
 });
 
 //EDIT
-router.patch("/:id", uploader.single("image"), async (req, res) => {
+router.patch("/:id", upload.single("image"), async (req, res) => {
   try {
     const { id } = req.params;
     const { category, title, content } = req.body;
-
-    const existingPost = await Post.findById(id);
-    if (!existingPost)
-      return res.status(404).json({ message: `404, Post Not Found` });
+    console.log("req.body ", req.body);
+    console.log("post._id ", id);
 
     const updateData = {};
 
@@ -142,13 +143,12 @@ router.patch("/:id", uploader.single("image"), async (req, res) => {
     if (title) updateData.title = title;
     if (content) updateData.content = content;
 
-    if (req.file && req.file.path) {
-      try {
-        const updatedImgData = await fileUpload.uploadFile(req.file.path);
-        updateData.img = updatedImgData.secure_url;
-      } catch (error) {
-        console.error("Error uploading img to cloudinary: ", error);
-      }
+    if (req.file && req.file.buffer) {
+      console.log("updating image");
+      updateData.img = {
+        data: req.file.buffer,
+        contentType: req.file.mimetype,
+      };
     }
 
     const updatedPost = await Post.findByIdAndUpdate(id, updateData, {
@@ -168,7 +168,9 @@ router.patch("/:id", uploader.single("image"), async (req, res) => {
         category: updatedPost.category,
         title: updatedPost.title,
         content: updatedPost.content,
-        img: updatedPost.img,
+        img: `data:${
+          updatedPost.img.contentType
+        };base64,${updatedPost.img.data.toString("base64")}`,
         userId: updatedPost.userId,
         username: updatedPost.username,
         createdAt: updatedPost.createdAt,
@@ -196,7 +198,9 @@ router.get("/:id", async (req, res) => {
         category: post.category,
         title: post.title,
         content: post.content,
-        img: post.img,
+        img: `data:${post.img.contentType};base64,${post.img.data.toString(
+          "base64"
+        )}`,
         userId: post.userId,
         username: post.username,
         createdAt: post.createdAt,
@@ -208,7 +212,8 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/userdetails", uploader.single("image"), async (req, res) => {
+//USER DETAILS API
+router.post("/userdetails", upload.single("image"), async (req, res) => {
   try {
     const { userId, username, userEmail, phone, location } = req.body;
     if (

@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FiEdit, FiX } from "react-icons/fi";
 import EditPostModal from "../EditPostModal/EditPostModal";
+import { Link, useNavigate } from "react-router-dom";
 
 const MyPosts = () => {
   const [posts, setPosts] = useState([]);
@@ -9,6 +10,7 @@ const MyPosts = () => {
   const [error, setError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
+  const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
@@ -106,6 +108,7 @@ const MyPosts = () => {
           {posts.map((post) => (
             <div
               key={post._id}
+              onClick={() => navigate(`/single-blog-details/${post._id}`)}
               className="bg-white cursor-pointer rounded overflow-hidden shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] relative top-0 hover:-top-2 transition-all duration-300 group"
             >
               <img
@@ -120,7 +123,8 @@ const MyPosts = () => {
                     backgroundColor: "rgba(255, 255, 255, 0.7)",
                     boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.3)",
                   }}
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     setSelectedPost(post);
                     setIsModalOpen(true);
                   }}
@@ -131,7 +135,8 @@ const MyPosts = () => {
                     backgroundColor: "rgba(255, 255, 255, 0.7)",
                     boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.3)",
                   }}
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     setSelectedPost(post);
                     handleDeletePost(post._id);
                   }}
